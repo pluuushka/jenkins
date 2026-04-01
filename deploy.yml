@@ -1,0 +1,36 @@
+---
+- name: Deploy Flask app with Docker Compose
+  hosts: target
+  become: yes
+  vars:
+    app_dir: /opt/myapp
+    compose_file: "{{ app_dir }}/docker-compose.yml"
+  tasks:
+    - name: Create application directory
+      file:
+        path: "{{ app_dir }}"
+        state: directory
+        mode: '0755'
+
+    - name: Copy Docker Compose file
+      copy:
+        src: ./docker-compose.yml
+        dest: "{{ compose_file }}"
+        mode: '0644'
+
+    - name: Copy application files
+      copy:
+        src: "{{ item }}"
+        dest: "{{ app_dir }}/"
+      loop:
+        - app.py
+        - requirements.txt
+        - Dockerfile
+
+    - name: Ensure Docker Compose is up
+      community.docker.docker_compose:
+        project_src: "{{ app_dir }}"
+        state: present
+        restarted: yes
+
+     
