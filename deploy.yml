@@ -26,9 +26,15 @@
         - app.py
         - requirements.txt
         - Dockerfile
+        - docker-compose.yml
+        - prometheus.yml
+        - loki-config.yml
+        - promtail-config.yml
+
 
     - name: Run docker compose up
       shell: |
         cd {{ app_dir }}
         docker compose up -d --build
       become: yes
+
