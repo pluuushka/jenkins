@@ -27,11 +27,8 @@
         - requirements.txt
         - Dockerfile
 
-    - name: Ensure Docker Compose is up
-      community.docker.docker_compose:
-        project_src: "{{ app_dir }}"
-        state: present
-        restarted: yes
-        use_docker_compose_v2: true
-
-     
+    - name: Run docker compose up
+      shell: |
+        cd {{ app_dir }}
+        docker compose up -d --build
+      become: yes
